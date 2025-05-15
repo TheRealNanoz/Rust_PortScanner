@@ -37,10 +37,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> /*return error without crash
                 }
             });
             tasks.push(task); // just added this line
-            let _ = task.await; // waits for everything to finish
+            //let _ = task.await; // waits for everything to finish
+        }
+        for task in tasks {
+            task.await.unwrap()
         }
     });
-
+    drop(tx);
     while let Ok((addr, port)) = rx.try_recv() {
         //loops rx (hence mut) for each message in channel
         println!("= {}:{}", addr, port); // prints every addr and port from Ok(_open) ports
@@ -60,7 +63,7 @@ async fn scan(
         // only do following if tcp connects (port is open)
         results_tx.send((addr, port)).await?;
         //&mut open_ports.push((args.addr, port));
-        println!("= {}:{}", addr, port);
+        //println!("= {}:{}", addr, port);
     };
     //println!("= {}:{}", args.addr, port);
     Ok(())
