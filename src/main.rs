@@ -28,7 +28,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> /*return error without crash
     rt.block_on(async {
         //blocks the main() function
         for port in args.port_start..=args.port_end {
-            println!("? = {}:{}", args.addr, port); // simply printing all ports
+            println!("Scanning {}:{}", args.addr, port); // simply printing all ports
             let tx = tx.clone(); // shadows the previous tx each time so that message is new
             let task = tokio::spawn(async move {
                 let scan_attempt = scan(args.addr, port, tx).await;
@@ -46,7 +46,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> /*return error without crash
     drop(tx);
     while let Ok((addr, port)) = rx.try_recv() {
         //loops rx (hence mut) for each message in channel
-        println!("= {}:{}", addr, port); // prints every addr and port from Ok(_open) ports
+        println!("Open port found at {}:{}", addr, port); // prints every addr and port from Ok(_open) ports
     }
 
     Ok(()) // end the function if no errors occur
